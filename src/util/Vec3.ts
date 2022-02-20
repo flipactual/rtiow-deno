@@ -63,7 +63,9 @@ export default class Vec3 {
   }
   /** Get the string representation of this Vec3 */
   toString(): string {
-    return `${this.x} ${this.y} ${this.z}`;
+    return `${Math.round(255 * this.x)} ${Math.round(255 * this.y)} ${
+      Math.round(255 * this.z)
+    }`;
   }
   /** Add a Vec3 to this Vec3 */
   add(v: Vec3): Vec3 {

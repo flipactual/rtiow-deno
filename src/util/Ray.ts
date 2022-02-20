@@ -4,16 +4,16 @@ import Point3 from "./Point3.ts";
 /** A ray */
 export default class Ray {
   /** The Ray's origin */
-  public A: Point3;
+  public origin: Point3;
   /** The Ray's direction */
-  public b: Vec3;
+  public direction: Vec3;
   /** Create a Ray */
-  constructor(A: Point3, b: Vec3) {
-    this.A = A;
-    this.b = b;
+  constructor(origin: Point3, direction: Vec3) {
+    this.origin = origin;
+    this.direction = direction;
   }
   /** Get the value at a position on the Ray */
   at(t: number): Point3 {
-    return Point3.add(this.A, Vec3.multiply(t, this.b));
+    return Point3.add(this.origin, Vec3.multiply(t, this.direction));
   }
 }
