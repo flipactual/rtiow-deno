@@ -1,11 +1,5 @@
 /** A three-dimensional vector */
 export default class Vec3 {
-  /** The x coordinate */
-  public x: number;
-  /** The y coordinate */
-  public y: number;
-  /** The z coordinate */
-  public z: number;
   /** Create a Vec3 that is the sum of two other Vec3s */
   static add(a: Vec3, b: Vec3): Vec3 {
     return new Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
@@ -55,6 +49,12 @@ export default class Vec3 {
   static unitVector(v: Vec3): Vec3 {
     return Vec3.divide(v, v.length());
   }
+  /** The Vec3's x coordinate */
+  public x: number;
+  /** The Vec3's y coordinate */
+  public y: number;
+  /** The Vec3's z coordinate */
+  public z: number;
   /** Create a Vec3 */
   constructor(x: number, y: number, z: number) {
     this.x = x;
