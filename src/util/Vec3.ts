@@ -33,11 +33,11 @@ export default class Vec3 {
   static divide(v: Vec3, x: number): Vec3 {
     return Vec3.multiply(v, 1 / x);
   }
-  /** @TODO */
+  /** Get the dot product of two Vec3s */
   static dot(a: Vec3, b: Vec3): number {
     return a.x * b.x + a.y * b.y + a.z * b.z;
   }
-  /** @TODO */
+  /** Get the cross product of two Vec3s */
   static cross(a: Vec3, b: Vec3): Vec3 {
     return new Vec3(
       a.y * b.z - a.z * b.y,
@@ -45,7 +45,7 @@ export default class Vec3 {
       a.x * b.y - a.y * b.x,
     );
   }
-  /** @TODO */
+  /** Get the unit vector of a Vec3 */
   static unitVector(v: Vec3): Vec3 {
     return Vec3.divide(v, v.length());
   }

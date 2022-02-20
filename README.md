@@ -2,8 +2,16 @@
 
 Because I'm really funny
 
-## Color Test
+## Scripts
+
+### Color Test
 
 ```sh
 deno run src/colorTest.ts > image.ppm
+```
+
+### LERP Background
+
+```sh
+deno run src/lerpBackground.ts > image.ppm
 ```
