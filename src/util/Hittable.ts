@@ -7,6 +7,7 @@ export interface HitRecord {
   p: Point3;
   normal: Vec3;
   t: number;
+  frontFace: boolean;
 }
 
 /** Interface for objects which can be hit */

@@ -35,7 +35,11 @@ export default class Sphere implements Hittable {
 
     rec.t = root;
     rec.p = r.at(rec.t);
-    rec.normal = rec.p.subtract(this.center).divide(this.radius);
+    const outwardNormal: Vec3 = (rec.p.subtract(this.center)).divide(
+      this.radius,
+    );
+    rec.frontFace = Vec3.dot(r.direction, outwardNormal) < 0;
+    rec.normal = rec.frontFace ? outwardNormal : outwardNormal.multiply(-1);
 
     return true;
   }
