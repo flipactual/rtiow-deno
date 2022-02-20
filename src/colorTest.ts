@@ -1,3 +1,5 @@
+import Color from "./util/Color.ts";
+
 const e = new TextEncoder();
 
 const stdout = (x: string) => Deno.stdout.write(e.encode(x));
@@ -14,11 +16,8 @@ ${imageWidth} ${imageHeight}
 for (let y = imageHeight - 1; y >= 0; y -= 1) {
   await stderr(`\r${y} lines remaining`);
   for (let x = 0; x < imageWidth; x += 1) {
-    const r = x / (imageWidth - 1);
-    const g = y / (imageHeight - 1);
-    const b = 0.25;
     await stdout(
-      `${Math.floor(255 * r)} ${Math.floor(255 * g)} ${Math.floor(255 * b)}
+      `${new Color(x / (imageWidth - 1), y / (imageHeight - 1), .25)}
 `,
     );
   }
