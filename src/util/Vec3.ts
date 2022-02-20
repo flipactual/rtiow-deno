@@ -74,6 +74,13 @@ export default class Vec3 {
     this.z += v.z;
     return this;
   }
+  /** Subtract a Vec3 from this Vec3 */
+  subtract(v: Vec3): Vec3 {
+    this.x -= v.x;
+    this.y -= v.y;
+    this.z -= v.z;
+    return this;
+  }
   /** Multiply this Vec3 by a value */
   multiply(x: number): Vec3 {
     this.x *= x;
