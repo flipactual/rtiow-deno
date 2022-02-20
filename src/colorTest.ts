@@ -1,7 +1,7 @@
-const tE = new TextEncoder();
+const e = new TextEncoder();
 
-const stdout = (x: string) => Deno.stdout.write(tE.encode(x));
-const stderr = (x: string) => Deno.stderr.write(tE.encode(x));
+const stdout = (x: string) => Deno.stdout.write(e.encode(x));
+const stderr = (x: string) => Deno.stderr.write(e.encode(x));
 
 const imageWidth = 255;
 const imageHeight = 255;
