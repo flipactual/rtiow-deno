@@ -14,10 +14,20 @@ const stdout = (x: string) => Deno.stdout.write(e.encode(x));
 const stderr = (x: string) => Deno.stderr.write(e.encode(x));
 
 // Creates a blue and white lerp background
-const rayColor = (r: Ray, world: Hittable) => {
-  const [hit, rec] = world.hit(r, 0, Number.POSITIVE_INFINITY);
+const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
+  if (depth <= 0) {
+    return new Color(0, 0, 0);
+  }
+  const [hit, rec] = world.hit(r, 0.001, Number.POSITIVE_INFINITY);
   if (hit) {
-    return Color.multiply(0.5, Color.add(rec.normal, new Color(1, 1, 1)));
+    const target: Point3 = Vec3.add(
+      Vec3.add(rec.p, rec.normal),
+      Vec3.randomInUnitSphere(),
+    );
+    return Color.multiply(
+      0.5,
+      rayColor(new Ray(rec.p, Vec3.subtract(target, rec.p)), world, depth - 1),
+    );
   }
   const unitDirection: Vec3 = Vec3.unitVector(r.direction);
   const t = .5 * (unitDirection.y + 1);
@@ -33,6 +43,7 @@ const rayColor = (r: Ray, world: Hittable) => {
   const imageWidth = 400;
   const imageHeight = imageWidth / aspectRatio;
   const samplesPerPixel = 100;
+  const depth = 50;
 
   // World
   const world = new HittableList();
@@ -56,7 +67,7 @@ ${imageWidth} ${imageHeight}
         const u = (x + Math.random()) / (imageWidth - 1);
         const v = (y + Math.random()) / (imageHeight - 1);
         const r = cam.getRay(u, v);
-        color = Color.add(color, rayColor(r, world));
+        color = Color.add(color, rayColor(r, world, depth));
       }
       line += color.string(samplesPerPixel);
     }

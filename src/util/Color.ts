@@ -12,7 +12,7 @@ export default class Color extends Vec3 {
         this.x,
         this.y,
         this.z,
-      ].map((x) => Math.round(256 * c(x * scale))).join(" ")
+      ].map((x) => Math.round(256 * c(Math.sqrt(x * scale)))).join(" ")
     }
 `;
   }

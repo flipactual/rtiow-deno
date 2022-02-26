@@ -1,3 +1,5 @@
+import randomInRange from "./randomInRange.ts";
+
 /** A three-dimensional vector */
 export default class Vec3 {
   /** Create a Vec3 that is the sum of two other Vec3s */
@@ -48,6 +50,21 @@ export default class Vec3 {
   /** Get the unit vector of a Vec3 */
   static unitVector<T extends Vec3>(v: T): T {
     return Vec3.divide(v, v.length());
+  }
+  /** Create a random Vec3 */
+  static random(min: number, max: number): Vec3 {
+    return new Vec3(
+      randomInRange(min, max),
+      randomInRange(min, max),
+      randomInRange(min, max),
+    );
+  }
+  static randomInUnitSphere() {
+    while (true) {
+      const p = Vec3.random(-1, 1);
+      if (p.lengthSquared() >= 1) continue;
+      return p;
+    }
   }
   /** The Vec3's x coordinate */
   public x: number;
