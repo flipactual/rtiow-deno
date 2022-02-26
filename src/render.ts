@@ -20,10 +20,7 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   }
   const [hit, rec] = world.hit(r, 0.001, Number.POSITIVE_INFINITY);
   if (hit) {
-    const target: Point3 = Vec3.add(
-      Vec3.add(rec.p, rec.normal),
-      Vec3.randomInUnitSphere(),
-    );
+    const target: Point3 = Vec3.add(rec.p, Vec3.randomInHemisphere(rec.normal));
     return Color.multiply(
       0.5,
       rayColor(new Ray(rec.p, Vec3.subtract(target, rec.p)), world, depth - 1),

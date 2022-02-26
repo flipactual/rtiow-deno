@@ -59,12 +59,24 @@ export default class Vec3 {
       randomInRange(min, max),
     );
   }
+  /** Get a point within the unit sphere */
   static randomInUnitSphere() {
     while (true) {
       const p = Vec3.random(-1, 1);
       if (p.lengthSquared() >= 1) continue;
       return p;
     }
+  }
+  /** Get a random unit vector */
+  static randomUnitVector() {
+    return Vec3.unitVector(Vec3.randomInUnitSphere());
+  }
+  /** Get a random vector in hemisphere */
+  static randomInHemisphere(normal: Vec3): Vec3 {
+    const inUnitSphere = Vec3.randomInUnitSphere();
+    return (Vec3.dot(inUnitSphere, normal) > 0)
+      ? inUnitSphere
+      : Vec3.multiply(inUnitSphere, -1);
   }
   /** The Vec3's x coordinate */
   public x: number;
