@@ -67,31 +67,6 @@ export default class Vec3 {
       Math.round(255 * this.z)
     }`;
   }
-  /** Add a Vec3 to this Vec3 */
-  add(v: Vec3): Vec3 {
-    this.x += v.x;
-    this.y += v.y;
-    this.z += v.z;
-    return this;
-  }
-  /** Subtract a Vec3 from this Vec3 */
-  subtract(v: Vec3): Vec3 {
-    this.x -= v.x;
-    this.y -= v.y;
-    this.z -= v.z;
-    return this;
-  }
-  /** Multiply this Vec3 by a value */
-  multiply(x: number): Vec3 {
-    this.x *= x;
-    this.y *= x;
-    this.z *= x;
-    return this;
-  }
-  /** Divide this Vec3 by a value */
-  divide(x: number): Vec3 {
-    return this.multiply(1 / x);
-  }
   /** Get the length of the Vec3 */
   length(): number {
     return Math.sqrt(this.lengthSquared());

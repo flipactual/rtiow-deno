@@ -44,7 +44,7 @@ export default class Sphere implements Hittable {
       t,
       p,
       frontFace,
-      normal: frontFace ? outwardNormal : outwardNormal.multiply(-1),
+      normal: frontFace ? outwardNormal : Vec3.multiply(outwardNormal, -1),
     };
 
     return [true, rec];
