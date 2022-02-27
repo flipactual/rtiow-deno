@@ -7,6 +7,7 @@ import HittableList from "./util/HittableList.ts";
 import Camera from "./util/Camera.ts";
 
 import Sphere from "./object/Sphere.ts";
+import Lambertian from "./material/Lambertian.ts";
 
 const e = new TextEncoder();
 
@@ -20,11 +21,10 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   }
   const [hit, rec] = world.hit(r, 0.001, Number.POSITIVE_INFINITY);
   if (hit) {
-    const target: Point3 = Vec3.add(rec.p, Vec3.randomInHemisphere(rec.normal));
-    return Color.multiply(
-      0.5,
-      rayColor(new Ray(rec.p, Vec3.subtract(target, rec.p)), world, depth - 1),
-    );
+    const [scatter, attenuation, scattered] = rec.matPtr.scatter(r, rec);
+    return scatter
+      ? Vec3.multiply(attenuation, rayColor(scattered, world, depth - 1))
+      : new Color(0, 0, 0);
   }
   const unitDirection: Vec3 = Vec3.unitVector(r.direction);
   const t = .5 * (unitDirection.y + 1);
@@ -37,15 +37,23 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
 (async () => {
   // Image
   const aspectRatio = 16 / 9;
-  const imageWidth = 400;
-  const imageHeight = imageWidth / aspectRatio;
+  const imageWidth = 1080;
+  const imageHeight = Math.floor(imageWidth / aspectRatio);
   const samplesPerPixel = 100;
   const depth = 50;
 
   // World
   const world = new HittableList();
-  world.add(new Sphere(new Point3(0, 0, -1), .5));
-  world.add(new Sphere(new Point3(0, -100.5, -1), 100));
+
+  const materialGround = new Lambertian(new Color(.8, .8, 0));
+  const materialCenter = new Lambertian(new Color(.7, .3, 0.3));
+  const materialLeft = new Lambertian(new Color(.8, .8, 0.8));
+  const materialRight = new Lambertian(new Color(.8, .6, 0.2));
+
+  world.add(new Sphere(new Point3(0, -100.5, -1), 100, materialGround));
+  world.add(new Sphere(new Point3(0, 0, -1), 100, materialCenter));
+  world.add(new Sphere(new Point3(-1, 0, -1), 100, materialLeft));
+  world.add(new Sphere(new Point3(1, 0, -1), 100, materialRight));
 
   // Camera
   const cam = new Camera();

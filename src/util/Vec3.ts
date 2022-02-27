@@ -78,6 +78,18 @@ export default class Vec3 {
       ? inUnitSphere
       : Vec3.multiply(inUnitSphere, -1);
   }
+  /** Determine whether a Vec3 is close to zero in all dimensions */
+  static nearZero(v: Vec3): boolean {
+    const s = 1e-8;
+    return (Math.abs(v.x) < s) && (Math.abs(v.y) < s) && (Math.abs(v.z) < s);
+  }
+  /** Reflect a Vec3 */
+  static reflect(v: Vec3, n: Vec3): Vec3 {
+    return Vec3.subtract(
+      v,
+      Vec3.multiply(2 * Vec3.dot(v, n), n),
+    );
+  }
   /** The Vec3's x coordinate */
   public x: number;
   /** The Vec3's y coordinate */

@@ -1,6 +1,7 @@
 import Hittable, { HitRecord } from "../util/Hittable.ts";
 import Point3 from "../util/Point3.ts";
 import Ray from "../util/Ray.ts";
+import Material from "../util/Material.ts";
 import Vec3 from "../util/Vec3.ts";
 
 /** A sphere */
@@ -9,10 +10,13 @@ export default class Sphere implements Hittable {
   public center: Point3;
   /** The radius of the Sphere */
   public radius: number;
+  /** The material for the Sphere */
+  public material: Material;
   /** Create a Sphere */
-  constructor(center: Point3, radius: number) {
+  constructor(center: Point3, radius: number, material: Material) {
     this.center = center;
     this.radius = radius;
+    this.material = material;
   }
   /** Calculate if the Sphere is hit by a Ray */
   hit(r: Ray, tMin: number, tMax: number): [boolean, HitRecord] {
@@ -45,6 +49,7 @@ export default class Sphere implements Hittable {
       p,
       frontFace,
       normal: frontFace ? outwardNormal : Vec3.multiply(outwardNormal, -1),
+      matPtr: this.material,
     };
 
     return [true, rec];
