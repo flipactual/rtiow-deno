@@ -21,10 +21,19 @@ export default class Dielectric extends Material {
     const refractionRatio = rec.frontFace ? 1 / this.ir : this.ir;
 
     const unitDirection = Vec3.unitVector(rIn.direction);
-    const refracted = Vec3.refract(unitDirection, rec.normal, refractionRatio);
+    const cosTheta = Math.min(
+      Vec3.dot(Vec3.multiply(unitDirection, -1), rec.normal),
+      1,
+    );
+    const sinTheta = Math.sqrt(1 - cosTheta ** 2);
 
-    const scattered = new Ray(rec.p, refracted);
+    const cannotRefract = refractionRatio * sinTheta > 1;
 
+    const direction = cannotRefract
+      ? Vec3.reflect(unitDirection, rec.normal)
+      : Vec3.refract(unitDirection, rec.normal, refractionRatio);
+
+    const scattered = new Ray(rec.p, direction);
     return [true, attenuation, scattered];
   }
 }

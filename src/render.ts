@@ -48,9 +48,9 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   const world = new HittableList();
 
   const materialGround = new Lambertian(new Color(0.8, 0.8, 0));
-  const materialCenter = new Dielectric(1.5);
+  const materialCenter = new Lambertian(new Color(0.1, 0.2, 0.5));
   const materialLeft = new Dielectric(1.5);
-  const materialRight = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
+  const materialRight = new Metal(new Color(0.8, 0.6, 0.2), 0);
 
   world.add(new Sphere(new Point3(0, -100.5, -1), 100, materialGround));
   world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
