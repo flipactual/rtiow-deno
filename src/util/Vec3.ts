@@ -90,6 +90,19 @@ export default class Vec3 {
       Vec3.multiply(2 * Vec3.dot(v, n), n),
     );
   }
+  /** Refract a Vec3 */
+  static refract(uv: Vec3, n: Vec3, etaiOverEtat: number) {
+    const cosTheta = Math.min(Vec3.dot(Vec3.multiply(uv, -1), n), 1);
+    const rOutPerp = Vec3.multiply(
+      etaiOverEtat,
+      Vec3.add(uv, Vec3.multiply(cosTheta, n)),
+    );
+    const rOutParallel = Vec3.multiply(
+      -Math.sqrt(Math.abs(1.0 - rOutPerp.lengthSquared())),
+      n,
+    );
+    return Vec3.add(rOutPerp, rOutParallel);
+  }
   /** The Vec3's x coordinate */
   public x: number;
   /** The Vec3's y coordinate */
