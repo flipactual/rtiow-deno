@@ -8,6 +8,7 @@ import Camera from "./util/Camera.ts";
 
 import Sphere from "./object/Sphere.ts";
 import Lambertian from "./material/Lambertian.ts";
+import Metal from "./material/Metal.ts";
 
 const e = new TextEncoder();
 
@@ -47,8 +48,8 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
 
   const materialGround = new Lambertian(new Color(.8, .8, 0));
   const materialCenter = new Lambertian(new Color(.7, .3, 0.3));
-  const materialLeft = new Lambertian(new Color(.8, .8, 0.8));
-  const materialRight = new Lambertian(new Color(.8, .6, 0.2));
+  const materialLeft = new Metal(new Color(.8, .8, 0.8));
+  const materialRight = new Metal(new Color(.8, .6, 0.2));
 
   world.add(new Sphere(new Point3(0, -100.5, -1), 100, materialGround));
   world.add(new Sphere(new Point3(0, 0, -1), 100, materialCenter));
