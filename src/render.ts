@@ -45,6 +45,7 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   const depth = 50;
 
   // World
+  // const R = Math.cos(Math.PI / 4);
   const world = new HittableList();
 
   const materialGround = new Lambertian(new Color(0.8, 0.8, 0));
@@ -58,7 +59,13 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
 
   // Camera
-  const cam = new Camera();
+  const cam = new Camera(
+    new Point3(-2, 2, 1),
+    new Point3(0, 0, -1),
+    new Vec3(0, 1, 0),
+    20,
+    aspectRatio,
+  );
 
   await stdout(`P3
 ${imageWidth} ${imageHeight}
