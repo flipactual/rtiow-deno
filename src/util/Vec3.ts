@@ -103,6 +103,14 @@ export default class Vec3 {
     );
     return Vec3.add(rOutPerp, rOutParallel);
   }
+  /** Get a random Vec3 in unit disk */
+  static randomInUnitDisk() {
+    while (true) {
+      const p = new Vec3(randomInRange(-1, 1), randomInRange(-1, 1), 0);
+      if (p.lengthSquared() >= 1) continue;
+      return p;
+    }
+  }
   /** The Vec3's x coordinate */
   public x: number;
   /** The Vec3's y coordinate */

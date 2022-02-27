@@ -14,6 +14,14 @@ export default class Camera {
   public vertical: Vec3;
   /** The lower left corner */
   public lowerLeftCorner: Vec3;
+  /** The radius of the lens */
+  public lensRadius: number;
+  /** The x vector */
+  public u: Vec3;
+  /** The y vector */
+  public v: Vec3;
+  /** The z vector */
+  public w: Vec3;
   /** Create a Camera */
   constructor(
     lookFrom: Point3,
@@ -21,31 +29,46 @@ export default class Camera {
     vup: Vec3,
     vfov: number,
     aspectRatio: number,
+    aperture: number,
+    focusDist: number,
   ) {
     const theta = degreesToRadians(vfov);
     const h = Math.tan(theta / 2);
     const viewportHeight = 2 * h;
     const viewportWidth = aspectRatio * viewportHeight;
 
-    const w = Vec3.unitVector(Vec3.subtract(lookFrom, lookAt));
-    const u = Vec3.unitVector(Vec3.cross(vup, w));
-    const v = Vec3.cross(w, u);
+    this.w = Vec3.unitVector(Vec3.subtract(lookFrom, lookAt));
+    this.u = Vec3.unitVector(Vec3.cross(vup, this.w));
+    this.v = Vec3.cross(this.w, this.u);
 
     this.origin = lookFrom;
-    this.horizontal = Vec3.multiply(viewportWidth, u);
-    this.vertical = Vec3.multiply(viewportHeight, v);
+    this.horizontal = Vec3.multiply(
+      focusDist,
+      Vec3.multiply(viewportWidth, this.u),
+    );
+    this.vertical = Vec3.multiply(
+      focusDist,
+      Vec3.multiply(viewportHeight, this.v),
+    );
     this.lowerLeftCorner = Vec3.subtract(
       Vec3.subtract(
         Vec3.subtract(this.origin, Vec3.divide(this.horizontal, 2)),
         Vec3.divide(this.vertical, 2),
       ),
-      w,
+      Vec3.multiply(focusDist, this.w),
     );
+
+    this.lensRadius = aperture / 2;
   }
   /** Get a Ray from the Camera */
   getRay(s: number, t: number): Ray {
+    const rd = Vec3.multiply(this.lensRadius, Vec3.randomInUnitDisk());
+    const offset = Vec3.add(
+      Vec3.multiply(this.u, rd.x),
+      Vec3.multiply(this.v, rd.y),
+    );
     return new Ray(
-      this.origin,
+      Vec3.add(this.origin, offset),
       Vec3.subtract(
         Vec3.add(
           Vec3.add(
@@ -54,7 +77,7 @@ export default class Camera {
           ),
           Vec3.multiply(t, this.vertical),
         ),
-        this.origin,
+        Vec3.subtract(this.origin, offset),
       ),
     );
   }

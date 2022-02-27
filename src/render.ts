@@ -59,12 +59,16 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
 
   // Camera
+  const lookFrom = new Point3(3, 3, 2);
+  const lookAt = new Point3(0, 0, -1);
   const cam = new Camera(
-    new Point3(-2, 2, 1),
+    new Point3(3, 3, 2),
     new Point3(0, 0, -1),
     new Vec3(0, 1, 0),
     20,
     aspectRatio,
+    2,
+    Vec3.subtract(lookFrom, lookAt).length(),
   );
 
   await stdout(`P3
