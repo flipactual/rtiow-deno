@@ -38,7 +38,7 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
 (async () => {
   // Image
   const aspectRatio = 16 / 9;
-  const imageWidth = 1080;
+  const imageWidth = 1080 / 4;
   const imageHeight = Math.floor(imageWidth / aspectRatio);
   const samplesPerPixel = 100;
   const depth = 50;
@@ -46,10 +46,10 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   // World
   const world = new HittableList();
 
-  const materialGround = new Lambertian(new Color(.8, .8, 0));
-  const materialCenter = new Lambertian(new Color(.7, .3, 0.3));
-  const materialLeft = new Metal(new Color(.8, .8, 0.8));
-  const materialRight = new Metal(new Color(.8, .6, 0.2));
+  const materialGround = new Lambertian(new Color(0.8, 0.8, 0));
+  const materialCenter = new Lambertian(new Color(0.7, 0.3, 0.3));
+  const materialLeft = new Metal(new Color(0.8, 0.8, 0.8));
+  const materialRight = new Metal(new Color(0.8, 0.6, 0.2));
 
   world.add(new Sphere(new Point3(0, -100.5, -1), 100, materialGround));
   world.add(new Sphere(new Point3(0, 0, -1), 100, materialCenter));
