@@ -52,9 +52,9 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   const materialRight = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
 
   world.add(new Sphere(new Point3(0, -100.5, -1), 100, materialGround));
-  world.add(new Sphere(new Point3(0, 0, -1), 100, materialCenter));
-  world.add(new Sphere(new Point3(-1, 0, -1), 100, materialLeft));
-  world.add(new Sphere(new Point3(1, 0, -1), 100, materialRight));
+  world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
+  world.add(new Sphere(new Point3(-1, 0, -1), 0.5, materialLeft));
+  world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
 
   // Camera
   const cam = new Camera();
