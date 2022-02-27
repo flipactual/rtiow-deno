@@ -16,6 +16,7 @@ export default class Metal extends Material {
     this.albedo = a;
     this.fuzz = f < 1 ? f : 1;
   }
+  /** Scatter Ray and calculate attenuation */
   scatter(
     rIn: Ray,
     rec: HitRecord,

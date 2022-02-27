@@ -13,6 +13,7 @@ export default class Lambertian extends Material {
     super();
     this.albedo = a;
   }
+  /** Scatter Ray and calculate attenuation */
   scatter(
     _rIn: Ray,
     rec: HitRecord,

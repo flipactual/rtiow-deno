@@ -13,7 +13,8 @@ export default class Dielectric extends Material {
     super();
     this.ir = indexOfRefraction;
   }
-  scatter(
+  /** Scatter Ray and calculate attenuation */
+  public scatter(
     rIn: Ray,
     rec: HitRecord,
   ): [boolean, Color, Ray] {
@@ -29,11 +30,18 @@ export default class Dielectric extends Material {
 
     const cannotRefract = refractionRatio * sinTheta > 1;
 
-    const direction = cannotRefract
+    const direction = cannotRefract ||
+        this.reflectance(cosTheta, refractionRatio) > Math.random()
       ? Vec3.reflect(unitDirection, rec.normal)
       : Vec3.refract(unitDirection, rec.normal, refractionRatio);
 
     const scattered = new Ray(rec.p, direction);
     return [true, attenuation, scattered];
+  }
+  /** Calculate reflectance */
+  private reflectance(cosine: number, refIdx: number): number {
+    let r0 = (1 - refIdx) / (1 + refIdx);
+    r0 = r0 ** 2;
+    return r0 + (1 - r0) * (1 - cosine) ** .5;
   }
 }
