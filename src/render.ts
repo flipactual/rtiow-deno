@@ -11,10 +11,60 @@ import Lambertian from "./material/Lambertian.ts";
 import Metal from "./material/Metal.ts";
 import Dielectric from "./material/Dielectric.ts";
 
+import randomInRange from "./util/randomInRange.ts";
+
 const e = new TextEncoder();
 
 const stdout = (x: string) => Deno.stdout.write(e.encode(x));
 const stderr = (x: string) => Deno.stderr.write(e.encode(x));
+
+// Creates a random scene
+const randomScene = (): HittableList => {
+  const world = new HittableList();
+
+  const groundMaterial = new Lambertian(new Color(0.5, 0.5, 0.5));
+  world.add(new Sphere(new Point3(0, -1000, 0), 1000, groundMaterial));
+
+  for (let a = -11; a < 11; a += 1) {
+    for (let b = -11; b < 11; b += 1) {
+      const chooseMat = Math.random();
+      const center = new Point3(
+        a + 0.9 * Math.random(),
+        0.2,
+        b + 0.9 * Math.random(),
+      );
+
+      if (Vec3.subtract(center, new Point3(4, 0.2, 0)).length() > 0.9) {
+        if (chooseMat < 0.8) {
+          // diffuse
+          const albedo = Vec3.multiply(Color.random(0, 1), Color.random(0, 1));
+          world.add(new Sphere(center, 0.2, new Lambertian(albedo)));
+        } else if (chooseMat < 0.95) {
+          // metal
+          const albedo = Color.random(0.5, 1);
+          const fuzz = randomInRange(0, 0.5);
+          world.add(
+            new Sphere(center, 0.2, new Metal(albedo, fuzz)),
+          );
+        } else {
+          // glass
+          world.add(new Sphere(center, 0.2, new Dielectric(1.5)));
+        }
+      }
+    }
+  }
+
+  // auto material1 = make_shared<dielectric>(1.5);
+  // world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+
+  // auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+  // world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+
+  // auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+  // world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
+  return world;
+};
 
 // Creates a blue and white lerp background
 const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
@@ -39,36 +89,29 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
 (async () => {
   // Image
   const aspectRatio = 16 / 9;
-  const imageWidth = 1080 / 4;
+  const imageWidth = 1200;
   const imageHeight = Math.floor(imageWidth / aspectRatio);
   const samplesPerPixel = 100;
   const depth = 50;
 
   // World
-  // const R = Math.cos(Math.PI / 4);
-  const world = new HittableList();
-
-  const materialGround = new Lambertian(new Color(0.8, 0.8, 0));
-  const materialCenter = new Lambertian(new Color(0.1, 0.2, 0.5));
-  const materialLeft = new Dielectric(1.5);
-  const materialRight = new Metal(new Color(0.8, 0.6, 0.2), 0);
-
-  world.add(new Sphere(new Point3(0, -100.5, -1), 100, materialGround));
-  world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
-  world.add(new Sphere(new Point3(-1, 0, -1), 0.5, materialLeft));
-  world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
+  const world = randomScene();
 
   // Camera
-  const lookFrom = new Point3(3, 3, 2);
-  const lookAt = new Point3(0, 0, -1);
+  const lookFrom = new Point3(13, 2, 3);
+  const lookAt = new Point3(0, 0, 0);
+  const vup = new Vec3(0, 1, 0);
+  const distToFocus = 10;
+  const aperture = 0.1;
+
   const cam = new Camera(
-    new Point3(3, 3, 2),
-    new Point3(0, 0, -1),
-    new Vec3(0, 1, 0),
+    lookFrom,
+    lookAt,
+    vup,
     20,
     aspectRatio,
-    2,
-    Vec3.subtract(lookFrom, lookAt).length(),
+    aperture,
+    distToFocus,
   );
 
   await stdout(`P3
