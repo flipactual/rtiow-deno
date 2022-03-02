@@ -54,14 +54,14 @@ const randomScene = (): HittableList => {
     }
   }
 
-  // auto material1 = make_shared<dielectric>(1.5);
-  // world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+  const material1 = new Dielectric(1.5);
+  world.add(new Sphere(new Point3(0, 1, 0), 1.0, material1));
 
-  // auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-  // world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+  const material2 = new Lambertian(new Color(0.4, 0.2, 0.1));
+  world.add(new Sphere(new Point3(-4, 1, 0), 1.0, material2));
 
-  // auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-  // world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+  const material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
+  world.add(new Sphere(new Point3(4, 1, 0), 1.0, material3));
 
   return world;
 };
@@ -88,10 +88,10 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
 
 (async () => {
   // Image
-  const aspectRatio = 16 / 9;
+  const aspectRatio = 3 / 2;
   const imageWidth = 1200;
   const imageHeight = Math.floor(imageWidth / aspectRatio);
-  const samplesPerPixel = 100;
+  const samplesPerPixel = 500;
   const depth = 50;
 
   // World

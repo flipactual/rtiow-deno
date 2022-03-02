@@ -70,14 +70,14 @@ export default class Camera {
     return new Ray(
       Vec3.add(this.origin, offset),
       Vec3.subtract(
-        Vec3.add(
+        Vec3.subtract(
           Vec3.add(
-            this.lowerLeftCorner,
-            Vec3.multiply(s, this.horizontal),
+            Vec3.add(this.lowerLeftCorner, Vec3.multiply(s, this.horizontal)),
+            Vec3.multiply(t, this.vertical),
           ),
-          Vec3.multiply(t, this.vertical),
+          this.origin,
         ),
-        Vec3.subtract(this.origin, offset),
+        offset,
       ),
     );
   }
