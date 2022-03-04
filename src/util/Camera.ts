@@ -61,20 +61,23 @@ export default class Camera {
     this.lensRadius = aperture / 2;
   }
   /** Get a Ray from the Camera */
-  getRay(s: number, t: number): Ray {
-    const rd = Vec3.multiply(this.lensRadius, Vec3.randomInUnitDisk());
+  getRay(random: () => number, s: number, t: number): Ray {
+    const rd = Vec3.multiply(this.lensRadius, Vec3.randomInUnitDisk(random));
     const offset = Vec3.add(
       Vec3.multiply(this.u, rd.x),
       Vec3.multiply(this.v, rd.y),
+    );
+    const sByHorizontal = Vec3.multiply(s, this.horizontal);
+    const tByVertical = Vec3.multiply(t, this.vertical);
+    const sum = Vec3.add(
+      Vec3.add(this.lowerLeftCorner, sByHorizontal),
+      tByVertical,
     );
     return new Ray(
       Vec3.add(this.origin, offset),
       Vec3.subtract(
         Vec3.subtract(
-          Vec3.add(
-            Vec3.add(this.lowerLeftCorner, Vec3.multiply(s, this.horizontal)),
-            Vec3.multiply(t, this.vertical),
-          ),
+          sum,
           this.origin,
         ),
         offset,

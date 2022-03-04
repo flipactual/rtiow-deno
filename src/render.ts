@@ -12,6 +12,14 @@ import Metal from "./material/Metal.ts";
 import Dielectric from "./material/Dielectric.ts";
 
 import randomInRange from "./util/randomInRange.ts";
+import xoshiro from "./util/xoshiro.ts";
+
+const random = xoshiro(
+  Math.random() * Number.MAX_SAFE_INTEGER,
+  Math.random() * Number.MAX_SAFE_INTEGER,
+  Math.random() * Number.MAX_SAFE_INTEGER,
+  Math.random() * Number.MAX_SAFE_INTEGER,
+);
 
 const e = new TextEncoder();
 
@@ -27,22 +35,25 @@ const randomScene = (): HittableList => {
 
   for (let a = -11; a < 11; a += 1) {
     for (let b = -11; b < 11; b += 1) {
-      const chooseMat = Math.random();
+      const chooseMat = random();
       const center = new Point3(
-        a + 0.9 * Math.random(),
+        a + 0.9 * random(),
         0.2,
-        b + 0.9 * Math.random(),
+        b + 0.9 * random(),
       );
 
       if (Vec3.subtract(center, new Point3(4, 0.2, 0)).length() > 0.9) {
         if (chooseMat < 0.8) {
           // diffuse
-          const albedo = Vec3.multiply(Color.random(0, 1), Color.random(0, 1));
+          const albedo = Vec3.multiply(
+            Color.random(random, 0, 1),
+            Color.random(random, 0, 1),
+          );
           world.add(new Sphere(center, 0.2, new Lambertian(albedo)));
         } else if (chooseMat < 0.95) {
           // metal
-          const albedo = Color.random(0.5, 1);
-          const fuzz = randomInRange(0, 0.5);
+          const albedo = Color.random(random, 0.5, 1);
+          const fuzz = randomInRange(random, 0, 0.5);
           world.add(
             new Sphere(center, 0.2, new Metal(albedo, fuzz)),
           );
@@ -73,7 +84,11 @@ const rayColor = (r: Ray, world: Hittable, depth: number): Color => {
   }
   const [hit, rec] = world.hit(r, 0.001, Number.POSITIVE_INFINITY);
   if (hit) {
-    const [scatter, attenuation, scattered] = rec.matPtr.scatter(r, rec);
+    const [scatter, attenuation, scattered] = rec.matPtr.scatter(
+      r,
+      rec,
+      random,
+    );
     return scatter
       ? Vec3.multiply(attenuation, rayColor(scattered, world, depth - 1))
       : new Color(0, 0, 0);
@@ -125,9 +140,9 @@ ${imageWidth} ${imageHeight}
     for (let x = 0; x < imageWidth; x += 1) {
       let color: Color = new Color(0, 0, 0);
       for (let _s = 0; _s < samplesPerPixel; _s += 1) {
-        const u = (x + Math.random()) / (imageWidth - 1);
-        const v = (y + Math.random()) / (imageHeight - 1);
-        const r = cam.getRay(u, v);
+        const u = (x + random()) / (imageWidth - 1);
+        const v = (y + random()) / (imageHeight - 1);
+        const r = cam.getRay(random, u, v);
         color = Color.add(color, rayColor(r, world, depth));
       }
       line += color.string(samplesPerPixel);

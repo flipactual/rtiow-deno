@@ -20,11 +20,15 @@ export default class Metal extends Material {
   scatter(
     rIn: Ray,
     rec: HitRecord,
+    random: () => number,
   ): [boolean, Color, Ray] {
     const reflected = Vec3.reflect(Vec3.unitVector(rIn.direction), rec.normal);
     const scattered = new Ray(
       rec.p,
-      Vec3.add(reflected, Vec3.multiply(this.fuzz, Vec3.randomInUnitSphere())),
+      Vec3.add(
+        reflected,
+        Vec3.multiply(this.fuzz, Vec3.randomInUnitSphere(random)),
+      ),
     );
     return [
       Vec3.dot(scattered.direction, rec.normal) > 0,

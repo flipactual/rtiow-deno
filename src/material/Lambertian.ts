@@ -17,8 +17,9 @@ export default class Lambertian extends Material {
   scatter(
     _rIn: Ray,
     rec: HitRecord,
+    random: () => number,
   ): [boolean, Color, Ray] {
-    let scatterDirection = Vec3.add(rec.normal, Vec3.randomUnitVector());
+    let scatterDirection = Vec3.add(rec.normal, Vec3.randomUnitVector(random));
     if (Vec3.nearZero(scatterDirection)) {
       scatterDirection = rec.normal;
     }

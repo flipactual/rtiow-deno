@@ -17,9 +17,10 @@ export default class Dielectric extends Material {
   public scatter(
     rIn: Ray,
     rec: HitRecord,
+    random: () => number,
   ): [boolean, Color, Ray] {
     const attenuation = new Color(1, 1, 1);
-    const refractionRatio = rec.frontFace ? 1 / this.ir : this.ir;
+    const refractionRatio = rec.frontFace ? (1 / this.ir) : this.ir;
 
     const unitDirection = Vec3.unitVector(rIn.direction);
     const cosTheta = Math.min(
@@ -31,7 +32,7 @@ export default class Dielectric extends Material {
     const cannotRefract = refractionRatio * sinTheta > 1;
 
     const direction = cannotRefract ||
-        this.reflectance(cosTheta, refractionRatio) > Math.random()
+        this.reflectance(cosTheta, refractionRatio) > random()
       ? Vec3.reflect(unitDirection, rec.normal)
       : Vec3.refract(unitDirection, rec.normal, refractionRatio);
 
@@ -42,6 +43,6 @@ export default class Dielectric extends Material {
   private reflectance(cosine: number, refIdx: number): number {
     let r0 = (1 - refIdx) / (1 + refIdx);
     r0 = r0 ** 2;
-    return r0 + (1 - r0) * (1 - cosine) ** .5;
+    return r0 + (1 - r0) * (1 - cosine) ** 5;
   }
 }

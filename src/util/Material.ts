@@ -10,6 +10,7 @@ export default class Material {
   scatter(
     _rIn: Ray,
     _rec: HitRecord,
+    _random: () => number,
   ): [boolean, Color, Ray] {
     return [
       false,

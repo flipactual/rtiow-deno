@@ -52,28 +52,28 @@ export default class Vec3 {
     return Vec3.divide(v, v.length());
   }
   /** Create a random Vec3 */
-  static random(min: number, max: number): Vec3 {
+  static random(random: () => number, min: number, max: number): Vec3 {
     return new Vec3(
-      randomInRange(min, max),
-      randomInRange(min, max),
-      randomInRange(min, max),
+      randomInRange(random, min, max),
+      randomInRange(random, min, max),
+      randomInRange(random, min, max),
     );
   }
   /** Get a point within the unit sphere */
-  static randomInUnitSphere() {
+  static randomInUnitSphere(random: () => number) {
     while (true) {
-      const p = Vec3.random(-1, 1);
+      const p = Vec3.random(random, -1, 1);
       if (p.lengthSquared() >= 1) continue;
       return p;
     }
   }
   /** Get a random unit vector */
-  static randomUnitVector() {
-    return Vec3.unitVector(Vec3.randomInUnitSphere());
+  static randomUnitVector(random: () => number) {
+    return Vec3.unitVector(Vec3.randomInUnitSphere(random));
   }
   /** Get a random vector in hemisphere */
-  static randomInHemisphere(normal: Vec3): Vec3 {
-    const inUnitSphere = Vec3.randomInUnitSphere();
+  static randomInHemisphere(random: () => number, normal: Vec3): Vec3 {
+    const inUnitSphere = Vec3.randomInUnitSphere(random);
     return (Vec3.dot(inUnitSphere, normal) > 0)
       ? inUnitSphere
       : Vec3.multiply(inUnitSphere, -1);
@@ -104,9 +104,13 @@ export default class Vec3 {
     return Vec3.add(rOutPerp, rOutParallel);
   }
   /** Get a random Vec3 in unit disk */
-  static randomInUnitDisk() {
+  static randomInUnitDisk(random: () => number) {
     while (true) {
-      const p = new Vec3(randomInRange(-1, 1), randomInRange(-1, 1), 0);
+      const p = new Vec3(
+        randomInRange(random, -1, 1),
+        randomInRange(random, -1, 1),
+        0,
+      );
       if (p.lengthSquared() >= 1) continue;
       return p;
     }
